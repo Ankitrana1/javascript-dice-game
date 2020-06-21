@@ -3,10 +3,11 @@ Game Rules :
     1. Two player can roll the dice as many time they want adding to their current score.
     2. The current score will only added to the main score if player hits the hold button.
     3. If a player roll 1, then the current score will be set to 0 and now it is next player's turn.
-    4. Player reaching the score 100 first, will be the winner.
+    4. If a player rolls 2 SIX in a row, then player looses main score and its turn.
+    5. Player reaching the score 100 first, will be the winner.
 */
 
-var activePlayer, score, roundScore, gamePlaying;
+var activePlayer, score, roundScore, previousRoll, gamePlaying;
 
 init();
 
@@ -24,10 +25,14 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
         diceDom.src = 'images/dice-' + dice + '.png';
         
         //3. Update the roundScore if dice value is not 1.
-        if(dice !== 1){
+        if(dice !== 1 && previousRoll != 6){
+            previousRoll = dice;
             roundScore += dice;
             document.getElementById('current-'+ activePlayer).textContent = roundScore;
         }else {
+            previousRoll = 0;
+            //Change the main score
+            document.getElementById('score-'+activePlayer).textContent = 0;
             //Next Player turn. Using method nextPlayer()
             nextPlayer();
         }
@@ -65,6 +70,7 @@ function init(){
     score = [0,0];
     activePlayer = 0;
     roundScore = 0;
+    previousRoll = 0;
     gamePlaying = true;
 
     //Don't display dice when we are starting game
@@ -93,6 +99,7 @@ function nextPlayer(){
     activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
     //2. Need to set roundScore 0, for the other player as we are using same variable to store both roundscore values.
     roundScore = 0;
+    previousRoll = 0;
     
     //Make current score default to 0 for both the players.
     document.getElementById('current-0').textContent = 0;
