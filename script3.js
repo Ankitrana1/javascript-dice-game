@@ -3,11 +3,11 @@ Game Rules :
     1. Two player can roll the dice as many time they want adding to their current score.
     2. The current score will only added to the main score if player hits the hold button.
     3. If a player roll 1, then the current score will be set to 0 and now it is next player's turn.
-    4. If a player roll 2 SIX in a row then set main score to 0 and its next player turn.
-    5. Player reaching the score 100 first, will be the winner.
+    4. Player reaching the score 100 first, will be the winner.
+    5. We can also add our own custom target score.
 */
 
-var activePlayer, score, roundScore, gamePlaying, previousRoll;
+var activePlayer, score, roundScore, gamePlaying, targetScore;
 
 init();
 
@@ -25,18 +25,13 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
         diceDom.src = 'images/dice-' + dice + '.png';
         
         //3. Update the roundScore if dice value is not 1.
-        if(dice == 6 && previousRoll == 6){
-            score[activePlayer] = 0;
-            document.getElementById('score-'+ activePlayer).textContent = '0';
-            nextPlayer();       
-        }else if(dice !== 1){
+        if(dice !== 1){
             roundScore += dice;
             document.getElementById('current-'+ activePlayer).textContent = roundScore;
         }else {
             //Next Player turn. Using method nextPlayer()
             nextPlayer();
         }
-        previousRoll = dice;
     }
 });
 
@@ -50,7 +45,7 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
         document.getElementById('score-'+ activePlayer).textContent = score[activePlayer];   
         
         //3. If player won the game
-        if(score[activePlayer] >= 100){
+        if(score[activePlayer] >= targetScore){
             document.getElementById('name-' + activePlayer).textContent = 'WINNER';
             document.querySelector('.dice').style.display = 'none';
             document.querySelector('.player-'+ activePlayer +'-panel').classList.add('winner');
@@ -66,11 +61,22 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
 //3. Event handling for New Game Button using callback function
 document.querySelector('.btn-new').addEventListener('click', init); 
 
+//4. Submit score event
+document.querySelector('.btn-sub').addEventListener('click', function(){
+    var tempScore = document.querySelector('.final-score').value;
+    tempScore = parseInt(tempScore);
+    if(typeof tempScore === 'number'){
+        targetScore = tempScore;
+    }
+    document.querySelector('.final-score').value = '';
+});
+
 //method to set initial state at every starting of the game.
 function init(){
     score = [0,0];
     activePlayer = 0;
     roundScore = 0;
+    targetScore = 100;
     gamePlaying = true;
 
     //Don't display dice when we are starting game
