@@ -1,5 +1,6 @@
 
 ( function(){
+    var score = 0;
     var question = function(ques, option, ans){
         this.ques = ques; 
         this.option = option;
@@ -14,11 +15,25 @@
     };
 
     question.prototype.checkAnswer = function(choice){
-        if(parseInt(choice) === this.ans){
-            console.log('Correct Answer!!!');
+        if(choice === 'exit'){
+
         }else{
-            console.log('Try Next Time');
+            if(parseInt(choice) === this.ans){
+                score++;
+                console.log('Correct Answer!!!');
+            }else{
+                console.log('Try Again');
+            }
+            console.log('Your current score level is : '+score);
+            console.log('========================================');
+            this.generateRandomQues();
         }
+    }
+
+    question.prototype.generateRandomQues = function(){
+        var rand = Math.floor(Math.random()*3);
+        questions[rand].display();
+        questions[rand].checkAnswer(prompt("Enter your Choice"));
     }
 
     var options = [
@@ -27,11 +42,9 @@
         ["1. India", "2. France", "3. Sri Lanka", "4. Japan"]
     ];
     var questions = [];
-    questions.push(new question("How many states are there in INDIA?", options[0], 2));
-    questions.push(new question("Ozone layer depleted from which country atmosphere?", options[1], 3));
-    questions.push(new question("Andaman Islands is part of which country?", options[2], 1));
-
-    var rand = Math.floor(Math.random()*3);
-    questions[rand].display();
-    questions[rand].checkAnswer(prompt("Enter your Choice"));
+    questions.push(new question("How many states are there in INDIA?", options[0], 2, 0));
+    questions.push(new question("Ozone layer depleted from which country atmosphere?", options[1], 3, 0));
+    questions.push(new question("Andaman Islands is part of which country?", options[2], 1, 0));
+    
+    questions[1].generateRandomQues();
 })();
